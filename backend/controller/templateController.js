@@ -1,11 +1,11 @@
 const CRUD = require('./baseController');
-const labelModel = require('../model/labelModel');
+const templateModel = require('../model/templateModel');
 const APIException = require('../libs/APIException');
 
-class labelController extends CRUD {
+class templateController extends CRUD {
     constructor() {
         super();
-        this.model = new labelModel;
+        this.model = new templateModel;
     }
 
     dataValidation = (data) => {
@@ -13,7 +13,7 @@ class labelController extends CRUD {
     }
 
     generateAnItem = async(req) => {
-        let response = await this.model.generateLabel(req.body);
+        let response = await this.model.generateTemplate(req.body);
         if (response) {
             return { data: response };
         } else {
@@ -22,4 +22,4 @@ class labelController extends CRUD {
     }
 }
 
-module.exports = labelController;
+module.exports = templateController;

@@ -1,5 +1,5 @@
 const express = require('express');
-var labels = require('./routes/label');
+var templates = require('./routes/template');
 const Database = require('./libs/dbConnection');
 
 const start = async() => {
@@ -15,7 +15,7 @@ const start = async() => {
         next();
     });
 
-    app.use('/labels', labels);
+    app.use('/templates', templates);
 
     console.log("server started");
     app.listen(3000);

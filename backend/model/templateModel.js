@@ -2,13 +2,13 @@ const baseModel = require('./baseModel');
 const { Label, PrintDensity, PrintDensityName, Spacing, Text, FontFamily, FontFamilyName, Barcode, BarcodeType, BarcodeTypeName } = require('jszpl');
 
 
-class labelModel extends baseModel {
+class templateModel extends baseModel {
     constructor() {
         super();
         this.collection = this.db.collection('template');
     }
 
-    generateLabel(data) {
+    generateTemplate(data) {
         const label = new Label();
         label.printDensity = new PrintDensity(PrintDensityName[`${data.dpmm}dpmm`]);
         label.width = data.width * 25.4;
@@ -17,10 +17,12 @@ class labelModel extends baseModel {
         data.textTemplates.forEach(textField => {
             const text = new Text();
             label.content.push(text);
-            text.fontFamily = new FontFamily(FontFamilyName.D);
+            if (textField.textSize == 11) text.fontFamily = new FontFamily(FontFamilyName.A);
+            else text.fontFamily = new FontFamily(FontFamilyName.D);
             text.text = textField.textContent;
             text.left = textField.positionX;
             text.top = textField.positionY;
+            text.characterHeight = textField.textSize - 11;
         });
 
         data.barcodeTemplates.forEach(barcodeField => {
@@ -38,13 +40,8 @@ class labelModel extends baseModel {
         let zpl = label.generateZPL();
 
         zpl = zpl.replace(/\n/g, "");
-        //console.log(zpl);
-        // let cmds = "^XA";
-        // cmds += "^BY2,3,90";
-        // cmds += `^FO60,20^BC^FD${data.zplcode}^FS`;
-        // cmds += "^XZ";
         return zpl;
     }
 }
 
-module.exports = labelModel;
+module.exports = templateModel;
