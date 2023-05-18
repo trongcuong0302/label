@@ -20,7 +20,7 @@ router.post("/", function(req, res) {
 
 router.post("/generate", function(req, res) {
     const template = new Template();
-    handleResponse(req, res, template.generateAnItem);
+    handleResponse(req, res, template.generateZPLCode);
 });
 
 router.put("/:id", function(req, res) {

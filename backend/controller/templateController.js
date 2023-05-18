@@ -12,8 +12,8 @@ class templateController extends CRUD {
         return data;
     }
 
-    generateAnItem = async(req) => {
-        let response = await this.model.generateTemplate(req.body);
+    generateZPLCode = (req) => {
+        let response = this.model.generateZPLCode(req.body);
         if (response) {
             return { data: response };
         } else {

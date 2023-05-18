@@ -1,5 +1,6 @@
 const baseModel = require('./baseModel');
-const { Label, PrintDensity, PrintDensityName, Spacing, Text, FontFamily, FontFamilyName, Barcode, BarcodeType, BarcodeTypeName } = require('jszpl');
+const mongo = require('mongodb');
+const { Label, PrintDensity, PrintDensityName, Text, FontFamily, FontFamilyName, Barcode, BarcodeType } = require('jszpl');
 
 
 class templateModel extends baseModel {
@@ -8,13 +9,13 @@ class templateModel extends baseModel {
         this.collection = this.db.collection('template');
     }
 
-    generateTemplate(data) {
+    generateZPLCode(data) {
         const label = new Label();
         label.printDensity = new PrintDensity(PrintDensityName[`${data.dpmm}dpmm`]);
         label.width = data.width * 25.4;
         label.height = data.height * 25.4;
 
-        data.textTemplates.forEach(textField => {
+        data.textTemplate.forEach(textField => {
             const text = new Text();
             label.content.push(text);
             if (textField.textSize == 11) text.fontFamily = new FontFamily(FontFamilyName.A);
@@ -25,7 +26,7 @@ class templateModel extends baseModel {
             text.characterHeight = textField.textSize - 11;
         });
 
-        data.barcodeTemplates.forEach(barcodeField => {
+        data.barcodeTemplate.forEach(barcodeField => {
             const barcode = new Barcode();
             label.content.push(barcode);
             barcode.type = new BarcodeType(barcodeField.bcType);
@@ -41,6 +42,36 @@ class templateModel extends baseModel {
 
         zpl = zpl.replace(/\n/g, "");
         return zpl;
+    }
+
+    insertAnItem(data) {
+        let input = {
+            dpmm: data.dpmm,
+            height: data.height,
+            width: data.width,
+            barcodeTemplate: data.barcode,
+            textTemplate: data.text
+        }
+        data.zplCode = this.generateZPLCode(input);
+        let date = new Date();
+        data.createdDate = date;
+        data.modifiedDate = date;
+        return this.collection.insertOne(data);
+    }
+
+    updateById(id, data) {
+        let input = {
+            dpmm: data.dpmm,
+            height: data.height,
+            width: data.width,
+            barcodeTemplate: data.barcode,
+            textTemplate: data.text
+        }
+        data.zplCode = this.generateZPLCode(input);
+        let date = new Date();
+        data.modifiedDate = date;
+        const updateDoc = { $set: data };
+        return this.collection.updateOne({ _id: mongo.ObjectId(id) }, updateDoc);
     }
 }
 
