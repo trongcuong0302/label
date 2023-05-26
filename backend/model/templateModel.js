@@ -1,6 +1,6 @@
 const baseModel = require('./baseModel');
 const mongo = require('mongodb');
-const { Label, PrintDensity, PrintDensityName, Text, FontFamily, FontFamilyName, Barcode, BarcodeType } = require('jszpl');
+const { Label, PrintDensity, PrintDensityName, Text, FontFamily, FontFamilyName, Barcode, BarcodeType, Spacing } = require('jszpl');
 
 
 class templateModel extends baseModel {
@@ -33,7 +33,7 @@ class templateModel extends baseModel {
             barcode.subset = "B";
             barcode.data = barcodeField.bcValue;
             barcode.left = barcodeField.positionX;
-            barcode.top = barcodeField.positionY;
+            barcode.top = barcodeField.positionY + 10;
             barcode.width = barcodeField.bcWidth;
             barcode.height = barcodeField.bcHeight;
         });
