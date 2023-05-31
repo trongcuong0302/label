@@ -22,7 +22,7 @@ class templateModel extends baseModel {
             else text.fontFamily = new FontFamily(FontFamilyName.D);
             text.text = textField.textContent;
             text.left = textField.positionX;
-            text.top = textField.positionY;
+            text.top = textField.positionY + 10;
             text.characterHeight = textField.textSize - 11;
         });
 

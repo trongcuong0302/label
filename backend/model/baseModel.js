@@ -32,6 +32,10 @@ class baseModel {
                     sort[item.field] = -1;
                 }
             }
+
+            if (item.field === 'templateName' && item.operator == 'includes') {
+                queryDb[item.field] = { $regex: item.value, $options: 'i' };
+            }
         });
         // find data
         const dataArray = this.collection.find(queryDb).skip(response.pageIndex * response.pageSize).limit(response.pageSize).sort(sort).toArray();
