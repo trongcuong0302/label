@@ -9,7 +9,17 @@ class templateController extends CRUD {
     }
 
     dataValidation = (data) => {
-        return data;
+        let checkedData = {};
+        let requiredFields = ['templateName', 'labelName', 'height', 'width', 'dpmm'];
+        let ignoredFields = ['_id', 'modifiedDate', 'createdDate'];
+        for (const property in data) {
+            if (requiredFields.includes(property) && !data[property]) {
+                return false;
+            }
+            if (ignoredFields.includes(property)) continue;
+            checkedData[property] = data[property];
+        }
+        return checkedData;
     }
 
     generateZPLCode = (req) => {
